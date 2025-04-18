@@ -3,29 +3,19 @@ import { NavLink } from "react-router-dom";
 import { green } from "@mui/material/colors";
 
 export function HomeNavbar() {
-  const authMember = null;
+  const authMember = true;
   return (
     <div className="home-navbar">
-      <Container sx={{ mt: "155px" }}>
+      <Container className="navbar-container">
         {/* 1 STACK */}
-        <Stack
-          sx={{ height: 50 }}
-          direction={"row"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-        >
+        <Stack className="menu">
           <Box>
             <NavLink to="/">
-              <img style={{ width: 125, height: 30 }} src="/icons/burak.svg" />
+              <img className="brand-logo" src="/icons/burak.svg" />
             </NavLink>
           </Box>
 
-          <Stack
-            flexDirection={"row"}
-            justifyContent={"space-between"}
-            minWidth={"700px"}
-            alignItems={"center"}
-          >
+          <Stack className="links">
             <Box className={"hover-line"}>
               <NavLink to={"./"} activeClassName="underline">
                 Home
@@ -59,19 +49,16 @@ export function HomeNavbar() {
 
             {!authMember ? (
               <Box>
-                <Button
-                  variant="contained"
-                  sx={{
-                    background: "#3776CC",
-                    color: "white",
-                    fontWeight: 500,
-                  }}
-                >
+                <Button variant="contained" className="login-button ">
                   Login
                 </Button>
               </Box>
             ) : (
-              <img />
+              <img
+                className="user-avatar"
+                src="/icons/default-user.svg"
+                aria-haspopup={"true"}
+              />
             )}
           </Stack>
         </Stack>
