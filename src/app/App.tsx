@@ -1,5 +1,4 @@
 import React from "react";
-import "../css/app.css";
 import { Stack, Container, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { RippleBadge } from "./MaterialTheme/styled";
@@ -13,6 +12,8 @@ import { HelpPage } from "./screens/helpPage";
 import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
 import { Footer } from "./components/footer";
+import "../css/app.css";
+import "../css/navbar.css";
 
 function App() {
   const location = useLocation();
@@ -31,6 +32,10 @@ function App() {
 
         <Route path="/member-page">
           <UsersPage />
+        </Route>
+
+        <Route path="/help">
+          <HelpPage />
         </Route>
 
         <Route path="/">
