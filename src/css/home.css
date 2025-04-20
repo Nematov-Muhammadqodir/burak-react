@@ -246,3 +246,77 @@
   transform: scale(1.5);
   overflow: hidden;
 }
+
+/* ACTIVE USERS */
+.homepage .active-users-frame {
+  width: 100%;
+  height: 550px;
+  /* background-color: yellow; */
+  background-color: #f8f8ff;
+  display: flex;
+}
+
+.homepage .active-users-frame .main {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  margin: 0;
+}
+
+/* Qaytamiz */
+.homepage .active-users-frame .main .category-title {
+  width: 214px;
+  height: 31.71px;
+  text-align: center;
+  font-family: Roboto Serif;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: normal;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.active-users-frame .cards-frame {
+  display: flex;
+  flex-direction: row;
+  display: flex;
+  gap: 14px;
+}
+
+.active-users-frame .cards-frame .card {
+  width: 305px;
+  height: 332.25px;
+  /* border: 1px solid black; */
+}
+
+.cards-nick {
+  display: flex;
+  align-items: center;
+}
+
+.active-users-frame .cards-frame .card .title {
+  color: rgb(0, 0, 0);
+  font-family: Roboto Serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0%;
+  text-align: center;
+  padding-top: 6px;
+}
+
+.active-users-frame .cards-frame .no-data {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 34px;
+  color: #e3c08d;
+}
