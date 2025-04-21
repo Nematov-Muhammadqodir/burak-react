@@ -191,31 +191,3 @@ export default function Products() {
 }
 
 //Hello
-
-{
-  /* <div className="product-card">
-                  <p className="product-size-absolute">LARGE size</p>
-                  <div className="product-card-image">
-                    <img src="/img/cutlet.webp" alt="" />
-                    <div className="image-hover-overlay">
-                      <div className="hover-icons">
-                        <div className="korzinka-container">
-                          <img src="/icons/shopping-cart.svg" alt="" />
-                        </div>
-                        <div className="eye-icon-container">
-                          <Badge badgeContent={4} color="secondary">
-                            <RemoveRedEyeIcon />
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="product-card-info">
-                    <p className="product-name">Korean Spicy Soup</p>
-                    <div className="product-price-contsiner">
-                      <MonetizationOnIcon />
-                      <p>15</p>
-                    </div>
-                  </div>
-                </div> */
-}
