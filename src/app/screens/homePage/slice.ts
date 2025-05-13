@@ -16,11 +16,11 @@ const homePageSlice = createSlice({
     },
 
     setNewDishes(state, action) {
-      state.popularDishes = action.payload;
+      state.newDishes = action.payload;
     },
 
     setTopUsers(state, action) {
-      state.popularDishes = action.payload;
+      state.topUsers = action.payload;
     },
   },
 });
