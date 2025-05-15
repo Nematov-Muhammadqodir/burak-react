@@ -12,8 +12,8 @@ class MemberService {
   public async getMembers(): Promise<Member[]> {
     try {
       let url = `${this.path}/member/top-users`;
-      const result = axios.get(url);
-      return (await result).data;
+      const result = await axios.get(url);
+      return result.data;
     } catch (err) {
       console.log("Error, getMembers", err);
       throw err;
