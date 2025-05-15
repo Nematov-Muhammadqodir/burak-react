@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
@@ -9,6 +9,13 @@ import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
+import { createSelector } from "reselect";
+import { Dispatch } from "@reduxjs/toolkit";
+import { Product } from "../../../lib/types/product";
+import { setRestaurant as setProducts } from "./slice";
+import { useDispatch, useSelector } from "react-redux";
+import ProductService from "../../services/ProductService";
+import { retrieveProducts } from "./select";
 const products = [
   { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
   { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
@@ -19,7 +26,29 @@ const products = [
   { productName: "Kebab", imagePath: "/img/kebab.webp" },
   { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
 ];
+
+const actionDispatch = (dispatch: Dispatch) => ({
+  setProducts: (data: Product[]) => dispatch(setProducts(data)),
+});
+
+const productsRestriever = createSelector(retrieveProducts, (products) => ({
+  products,
+}));
+
 export default function Products() {
+  const { setProducts } = actionDispatch(useDispatch());
+  const { products } = useSelector(productsRestriever);
+  useEffect(() => {
+    const allProducts = new ProductService();
+
+    allProducts
+      .getAllProducts()
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((err) => console.log("Error, setRestaurant Products.tsx:", err));
+  }, []);
+
   return (
     <div className="products">
       <Container>
@@ -102,7 +131,7 @@ export default function Products() {
                       <div className="product-card">
                         <p className="product-size-absolute">LARGE size</p>
                         <div className="product-card-image">
-                          <img src={ele.imagePath} alt="" />
+                          {/* <img src={ele.imagePath} alt="" /> */}
                           <div className="image-hover-overlay">
                             <div className="hover-icons">
                               <div className="korzinka-container">
