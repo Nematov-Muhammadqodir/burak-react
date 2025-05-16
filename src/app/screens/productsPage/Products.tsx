@@ -12,20 +12,12 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { createSelector } from "reselect";
 import { Dispatch } from "@reduxjs/toolkit";
 import { Product } from "../../../lib/types/product";
-import { setRestaurant as setProducts } from "./slice";
+import { setProducts } from "./slice";
 import { useDispatch, useSelector } from "react-redux";
 import ProductService from "../../services/ProductService";
 import { retrieveProducts } from "./select";
-const products = [
-  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab.webp" },
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
-];
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { serverApi } from "../../../lib/config";
 
 const actionDispatch = (dispatch: Dispatch) => ({
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
@@ -39,10 +31,16 @@ export default function Products() {
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRestriever);
   useEffect(() => {
-    const allProducts = new ProductService();
+    const product = new ProductService();
 
-    allProducts
-      .getAllProducts()
+    product
+      .getProducts({
+        page: 1,
+        limit: 8,
+        order: "createdAt",
+        // productCollection: ProductCollection.DISH,
+        search: "",
+      })
       .then((data) => {
         setProducts(data);
       })
@@ -126,30 +124,46 @@ export default function Products() {
             <Stack>
               <div className="product-card-container">
                 {products.length !== 0 ? (
-                  products.map((ele, index) => {
+                  products.map((product: Product) => {
+                    const imagePath = `${serverApi}/${product.productImages[0]}`;
+
+                    const sizeVolume =
+                      product.productCollection === ProductCollection.DRINK
+                        ? `${product.productVolume} litre`
+                        : `${product.productSize} size`;
                     return (
-                      <div className="product-card">
-                        <p className="product-size-absolute">LARGE size</p>
+                      <div className="product-card" key={product._id}>
+                        <p className="product-size-absolute">{sizeVolume}</p>
                         <div className="product-card-image">
-                          {/* <img src={ele.imagePath} alt="" /> */}
+                          <img src={imagePath} alt="" />
                           <div className="image-hover-overlay">
                             <div className="hover-icons">
                               <div className="korzinka-container">
                                 <img src="/icons/shopping-cart.svg" alt="" />
                               </div>
                               <div className="eye-icon-container">
-                                <Badge badgeContent={4} color="secondary">
-                                  <RemoveRedEyeIcon />
+                                <Badge
+                                  badgeContent={product.productViews}
+                                  color="secondary"
+                                >
+                                  <RemoveRedEyeIcon
+                                    sx={{
+                                      color:
+                                        product.productViews === 0
+                                          ? "grey"
+                                          : "white",
+                                    }}
+                                  />
                                 </Badge>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div className="product-card-info">
-                          <p className="product-name">{ele.productName}</p>
+                          <p className="product-name">{product.productName}</p>
                           <div className="product-price-contsiner">
                             <MonetizationOnIcon />
-                            <p>15</p>
+                            <p>{product.productPrice}</p>
                           </div>
                         </div>
                       </div>

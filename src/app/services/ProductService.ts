@@ -27,17 +27,6 @@ class ProductService {
       throw err;
     }
   }
-
-  public async getAllProducts() {
-    try {
-      const url = `${serverApi}/product/all`;
-      const result = await axios(url);
-      return result.data;
-    } catch (err) {
-      console.log("Error, getAllProducts", err);
-      throw err;
-    }
-  }
 }
 
 export default ProductService;
