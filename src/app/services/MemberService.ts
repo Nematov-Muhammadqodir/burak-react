@@ -19,6 +19,17 @@ class MemberService {
       throw err;
     }
   }
+
+  public async getRestaurant(): Promise<Member> {
+    try {
+      let url = `${this.path}/member/restaurant`;
+      const result = await axios.get(url);
+      return result.data as Member;
+    } catch (err) {
+      console.log("Error, getRestaurant", err);
+      throw err;
+    }
+  }
 }
 
 export default MemberService;
