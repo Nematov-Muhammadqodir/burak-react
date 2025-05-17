@@ -19,6 +19,7 @@ import { retrieveProducts } from "./select";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { serverApi } from "../../../lib/config";
 import { useHistory } from "react-router-dom";
+import { CartItem } from "../../../lib/types/search";
 
 const actionDispatch = (dispatch: Dispatch) => ({
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
@@ -28,7 +29,13 @@ const productsRestriever = createSelector(retrieveProducts, (products) => ({
   products,
 }));
 
-export default function Products() {
+interface ProductsProps {
+  onAdd: (input: CartItem) => void;
+}
+
+export default function Products(props: ProductsProps) {
+  const { onAdd } = props;
+
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRestriever);
   const [productSearch, setProductsSearch] = useState<ProductInquery>({
@@ -261,9 +268,21 @@ export default function Products() {
                           <img src={imagePath} alt="" />
                           <div className="image-hover-overlay">
                             <div className="hover-icons">
-                              <div className="korzinka-container">
+                              <button
+                                className="korzinka-container"
+                                onClick={(e) => {
+                                  onAdd({
+                                    _id: product._id,
+                                    quantity: 1,
+                                    name: product.productName,
+                                    price: product.productPrice,
+                                    image: product.productImages[0],
+                                  });
+                                  e.stopPropagation();
+                                }}
+                              >
                                 <img src="/icons/shopping-cart.svg" alt="" />
-                              </div>
+                              </button>
                               <div className="eye-icon-container">
                                 <Badge
                                   badgeContent={product.productViews}

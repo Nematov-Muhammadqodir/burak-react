@@ -3,8 +3,14 @@ import { NavLink } from "react-router-dom";
 import { green } from "@mui/material/colors";
 import Basket from "./Basket";
 import { useEffect, useState } from "react";
+import { CartItem } from "../../../lib/types/search";
 
-export default function HomeNavbar() {
+interface HomeNavbarProps {
+  cartItems: CartItem[];
+}
+
+export default function HomeNavbar(props: HomeNavbarProps) {
+  const { cartItems } = props;
   const [count, setCount] = useState(0);
   const [value, setValue] = useState(true);
   const authMember = null;
@@ -65,7 +71,7 @@ export default function HomeNavbar() {
               </NavLink>
             </Box>
             {/* BASKET */}
-            <Basket />
+            <Basket cartItems={cartItems} />
 
             {!authMember ? (
               <Box>
