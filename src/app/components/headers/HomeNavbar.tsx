@@ -104,7 +104,7 @@ export default function HomeNavbar(props: HomeNavbarProps) {
           <Stack className="detail">
             <Box className="head-main-text">World's Most Delicious Cousine</Box>
             <Box className="wel-txt">The Choice, not just a choice</Box>
-            <Box className="service-txt">{count} hours service</Box>
+            <Box className="service-txt">24/7 hours service</Box>
             <Box className="signup">
               {!authMember ? (
                 <Button
