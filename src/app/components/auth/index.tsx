@@ -80,14 +80,12 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
 
       const signupInput: MemberInput = {
         memberNick: memberNick,
-        memberPassword: memberPassword,
         memberPhone: memberPhone,
+        memberPassword: memberPassword,
       };
 
       const member = new MemberService();
       const result = await member.signup(signupInput);
-
-      //Saving authenticated user
       setAuthMember(result);
       handleSignupClose();
     } catch (err) {
