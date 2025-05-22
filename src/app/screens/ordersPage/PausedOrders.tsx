@@ -1,6 +1,6 @@
 import TabPanel from "@mui/lab/TabPanel";
 import { Box, Button, Stack } from "@mui/material";
-import { createSelector } from "@reduxjs/toolkit";
+import { createSelector } from "reselect";
 import { retrievePausedOrders } from "./selector";
 import { useSelector } from "react-redux";
 import { Order, OrderItem } from "../../../lib/types/order";
@@ -13,6 +13,8 @@ const pausedOrdersRetriever = createSelector(
 );
 export default function PausedOrders() {
   const { pausedOrders } = useSelector(pausedOrdersRetriever);
+
+  //* HANDLERS
 
   let numberOfOrders = [1, 2];
   let numberOfFoods = [1, 2, 3];
