@@ -1,5 +1,5 @@
-import { createContext, useContext } from "react";
 import { Member } from "../../lib/types/member";
+import { useContext, createContext } from "react";
 
 interface GlobalInterface {
   authMember: Member | null;
@@ -12,7 +12,7 @@ export const GlobalContext = createContext<GlobalInterface | undefined>(
 
 export const useGlobals = () => {
   const context = useContext(GlobalContext);
-  if (context === undefined) throw new Error("useGlobals within Provider");
+  if (!context) throw new Error("useGlobals within Provider");
 
   return context;
 };

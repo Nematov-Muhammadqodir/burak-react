@@ -24,6 +24,7 @@ import { sweetErrorHandling, sweetTopSuccessAlert } from "../lib/sweetAlert";
 import { Messages } from "../lib/config";
 import MemberService from "./services/MemberService";
 import { useGlobals } from "./hooks/useGlobals";
+import { MouseEvent } from "react";
 
 function App() {
   const location = useLocation();
@@ -37,7 +38,7 @@ function App() {
   const handleSignupClose = () => setSignupOpen(false);
   const handleLoginClose = () => setLoginOpen(false);
 
-  const handleLogoutClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleLogoutClick = (e: MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
   };
 
