@@ -5,16 +5,18 @@ import Box from "@mui/material/Box";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import PausedOrders from "./PausedOrders";
 import ProcessOrders from "./ProcessOrders";
 import FinishedOrders from "./FinishedOrders";
 import "../../../css/orders.css";
 import Divider from "../../components/divider";
-import { Order } from "../../../lib/types/order";
+import { Order, OrderInquery } from "../../../lib/types/order";
 import { setFinishedOrders, setPausedOrders, setProcessOrders } from "./slice";
 import { Dispatch } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
+import { OrderStatus } from "../../../lib/enums/order.enum";
+import OrderService from "../../services/OrderService";
 
 const actionDispatch = (dispatch: Dispatch) => ({
   setPausedOrders: (data: Order[]) => dispatch(setPausedOrders(data)),
@@ -27,6 +29,30 @@ export default function OrdersPage() {
     actionDispatch(useDispatch());
 
   const [value, setValue] = useState("1");
+  const [orderInquery, setOrderInquery] = useState<OrderInquery>({
+    page: 1,
+    limit: 5,
+    orderStatus: OrderStatus.PAUSE,
+  });
+
+  useEffect(() => {
+    const order = new OrderService();
+
+    order
+      .getMyOrders({ ...orderInquery, orderStatus: OrderStatus.PAUSE })
+      .then((data) => setPausedOrders(data))
+      .catch((err) => console.log(err));
+
+    order
+      .getMyOrders({ ...orderInquery, orderStatus: OrderStatus.PROCESS })
+      .then((data) => setProcessOrders(data))
+      .catch((err) => console.log(err));
+
+    order
+      .getMyOrders({ ...orderInquery, orderStatus: OrderStatus.FINISH })
+      .then((data) => setFinishedOrders(data))
+      .catch((err) => console.log(err));
+  }, [orderInquery]);
 
   //^ HANDLERS
 
@@ -86,6 +112,7 @@ export default function OrdersPage() {
                     <p>South Korea, Busan</p>
                   </div>
                 </div>
+
                 <div className="ordered-payments">
                   <div className="payment-inputs">
                     <input

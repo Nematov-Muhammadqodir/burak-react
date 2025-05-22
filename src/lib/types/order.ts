@@ -1,4 +1,5 @@
 import { OrderStatus } from "../enums/order.enum";
+import { Product } from "./product";
 
 export interface OrderItemInput {
   itemQuantity: number;
@@ -25,6 +26,8 @@ export interface Order {
   memberId: string;
   createdAt: Date;
   updatedAt: Date;
+  orderItems: OrderItem[];
+  productData: Product[];
 }
 
 export interface OrderInquery {

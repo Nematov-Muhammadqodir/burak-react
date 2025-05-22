@@ -7,8 +7,11 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useHistory } from "react-router-dom";
 import { CartItem } from "../../../lib/types/search";
-import { serverApi } from "../../../lib/config";
+import { Messages, serverApi } from "../../../lib/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useGlobals } from "../../hooks/useGlobals";
+import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import OrderService from "../../services/OrderService";
 
 interface BasketProps {
   cartItems: CartItem[];
@@ -20,8 +23,8 @@ interface BasketProps {
 
 export default function Basket(props: BasketProps) {
   const { cartItems, onAdd, onRemove, onDelete, onDeleteAll } = props;
-  console.log("cartItems", cartItems);
-  const authMember = null;
+
+  const { authMember } = useGlobals();
   const history = useHistory();
 
   const itemsPrice: number = cartItems.reduce((acc: number, item: CartItem) => {
@@ -42,6 +45,23 @@ export default function Basket(props: BasketProps) {
     setAnchorEl(null);
   };
 
+  const proceedOrderHandler = async () => {
+    try {
+      handleClose();
+      if (!authMember) throw new Error(Messages.error2);
+
+      const order = new OrderService();
+      await order.createOrder(cartItems);
+
+      onDeleteAll();
+
+      //*REFRESH VIA CONTEXT
+      history.push("/orders");
+    } catch (err) {
+      console.log("Error proccessOrderHandler", err);
+      sweetErrorHandling(err);
+    }
+  };
   return (
     <Box className={"hover-line"}>
       <IconButton
@@ -147,7 +167,11 @@ export default function Basket(props: BasketProps) {
               <span className={"price"}>
                 Total: ${totalPrice} ({itemsPrice} + {shippingCost})
               </span>
-              <Button startIcon={<ShoppingCartIcon />} variant={"contained"}>
+              <Button
+                startIcon={<ShoppingCartIcon />}
+                variant={"contained"}
+                onClick={proceedOrderHandler}
+              >
                 Order
               </Button>
             </Box>
