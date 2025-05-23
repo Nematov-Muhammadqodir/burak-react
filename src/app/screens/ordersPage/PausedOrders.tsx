@@ -2,22 +2,77 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Box, Button, Stack } from "@mui/material";
 import { createSelector } from "reselect";
 import { retrievePausedOrders } from "./selector";
-import { useSelector } from "react-redux";
-import { Order, OrderItem } from "../../../lib/types/order";
+import { useDispatch, useSelector } from "react-redux";
+import { Order, OrderItem, OrderUpdateInput } from "../../../lib/types/order";
 import { Product } from "../../../lib/types/product";
-import { serverApi } from "../../../lib/config";
+import { Messages, serverApi } from "../../../lib/config";
+import { OrderStatus } from "../../../lib/enums/order.enum";
+import OrderService from "../../services/OrderService";
+import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import { T } from "../../../lib/types/common";
+import { useGlobals } from "../../hooks/useGlobals";
+
+interface PausedOrdersInterface {
+  setValue: (input: string) => void;
+}
 
 const pausedOrdersRetriever = createSelector(
   retrievePausedOrders,
   (pausedOrders) => ({ pausedOrders })
 );
-export default function PausedOrders() {
+export default function PausedOrders(props: PausedOrdersInterface) {
+  const { setValue } = props;
+  const { authMember, setOrderBuilder } = useGlobals();
   const { pausedOrders } = useSelector(pausedOrdersRetriever);
 
   //* HANDLERS
 
-  let numberOfOrders = [1, 2];
-  let numberOfFoods = [1, 2, 3];
+  const deleteOrderHandler = async (e: T) => {
+    try {
+      if (!authMember) throw new Error(Messages.error2);
+      const orderId = e.target.value;
+      const input: OrderUpdateInput = {
+        orderId: orderId,
+        orderStatus: OrderStatus.DELETE,
+      };
+
+      const confirmation = window.confirm("Do you want to delete the order?");
+
+      if (confirmation) {
+        const order = new OrderService();
+        await order.updateOrder(input);
+        setOrderBuilder(new Date());
+      }
+    } catch (err) {
+      console.log("Error deleteOrderHandler:", err);
+      sweetErrorHandling(err).then();
+    }
+  };
+
+  const processOrderHandler = async (e: T) => {
+    try {
+      if (!authMember) throw Error(Messages.error2);
+      const orderId = e.target.value;
+      const input: OrderUpdateInput = {
+        orderId: orderId,
+        orderStatus: OrderStatus.PROCESS,
+      };
+
+      const confirmation = window.confirm(
+        "Do you want to proceed the payment?"
+      );
+
+      if (confirmation) {
+        const order = new OrderService();
+        await order.updateOrder(input);
+        setValue("2");
+        setOrderBuilder(new Date());
+      }
+    } catch (err) {
+      console.log("Error, processOrderHandler", err);
+      sweetErrorHandling(err).then();
+    }
+  };
 
   return (
     <TabPanel value="1">
@@ -65,6 +120,7 @@ export default function PausedOrders() {
 
                 <div className="ordered-food-btns">
                   <Button
+                    value={order._id}
                     sx={{
                       width: 93,
                       height: "100%",
@@ -73,10 +129,12 @@ export default function PausedOrders() {
                       fontWeight: "600",
                     }}
                     variant="contained"
+                    onClick={deleteOrderHandler}
                   >
                     CANCEL
                   </Button>
                   <Button
+                    value={order._id}
                     sx={{
                       width: 93,
                       height: "100%",
@@ -85,6 +143,7 @@ export default function PausedOrders() {
                       fontWeight: "600",
                     }}
                     variant="contained"
+                    onClick={processOrderHandler}
                   >
                     PAYMENT
                   </Button>
