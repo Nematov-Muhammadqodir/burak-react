@@ -18,6 +18,9 @@ import { useDispatch } from "react-redux";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import OrderService from "../../services/OrderService";
 import { useGlobals } from "../../hooks/useGlobals";
+import { useHistory } from "react-router-dom";
+import { serverApi } from "../../../lib/config";
+import { MemberType } from "../../../lib/enums/member.enum";
 
 const actionDispatch = (dispatch: Dispatch) => ({
   setPausedOrders: (data: Order[]) => dispatch(setPausedOrders(data)),
@@ -26,9 +29,11 @@ const actionDispatch = (dispatch: Dispatch) => ({
 });
 
 export default function OrdersPage() {
+  const history = useHistory();
+
   const { setPausedOrders, setProcessOrders, setFinishedOrders } =
     actionDispatch(useDispatch());
-  const { orderBuilder } = useGlobals();
+  const { orderBuilder, authMember } = useGlobals();
   const [value, setValue] = useState("1");
   const [orderInquery, setOrderInquery] = useState<OrderInquery>({
     page: 1,
@@ -61,6 +66,7 @@ export default function OrdersPage() {
     setValue(newValue);
   };
 
+  if (!authMember) history.push("/");
   return (
     <div className="order-page">
       <Container className="order-container">
@@ -95,22 +101,38 @@ export default function OrdersPage() {
               <div className="ordered-user-info">
                 <div className="ordered-user">
                   <div className="user-image">
-                    <img src="../../../img/justin.webp" alt="" />
+                    <img
+                      src={
+                        authMember?.memberImage
+                          ? `${serverApi}/${authMember.memberImage}`
+                          : "../../../icons/default-user.svg"
+                      }
+                      alt=""
+                    />
                     <img
                       className="user-badge"
-                      src="../../../icons/user-badge.svg"
+                      src={
+                        authMember?.memberType === MemberType.RESTAURANT
+                          ? "/icons/restaurant.svg"
+                          : `/icons/user-badge.svg`
+                      }
                       alt=""
                     />
                   </div>
                   <div className="user-name">
-                    <h2>Justin</h2>
+                    <h2>{authMember?.memberNick}</h2>
                     <h4>USER</h4>
                   </div>
                   <div className="divider" />
 
                   <div className="user-address">
                     <img src="../../../icons/location.svg" alt="" />
-                    <p>South Korea, Busan</p>
+                    <p>
+                      {" "}
+                      {authMember?.memberAddress
+                        ? authMember.memberAddress
+                        : "Do not exist!"}
+                    </p>
                   </div>
                 </div>
 

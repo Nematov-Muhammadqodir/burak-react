@@ -42,6 +42,7 @@ class OrderService {
       // axios.defaults.withCredentials = true;
 
       const url = `${this.path}/order/all`;
+      console.log("helllo");
 
       const query = `?page=${input.page}&limit=${input.limit}&orderStatus=${input.orderStatus}`;
 
