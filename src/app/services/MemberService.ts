@@ -90,7 +90,7 @@ class MemberService {
         data: formData,
         withCredentials: true,
         headers: {
-          "Context-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data",
         },
       });
 
