@@ -36,8 +36,7 @@ export default function PausedOrders(props: PausedOrdersInterface) {
         orderStatus: OrderStatus.DELETE,
       };
 
-      const confirmation = window.confirm("Do you want to delete the order?");
-
+      const confirmation = window.confirm("Do you wanna cancel the order?");
       if (confirmation) {
         const order = new OrderService();
         await order.updateOrder(input);
@@ -51,7 +50,7 @@ export default function PausedOrders(props: PausedOrdersInterface) {
 
   const processOrderHandler = async (e: T) => {
     try {
-      if (!authMember) throw Error(Messages.error2);
+      if (!authMember) throw new Error(Messages.error2);
       const orderId = e.target.value;
       const input: OrderUpdateInput = {
         orderId: orderId,
@@ -59,7 +58,7 @@ export default function PausedOrders(props: PausedOrdersInterface) {
       };
 
       const confirmation = window.confirm(
-        "Do you want to proceed the payment?"
+        "Do you want to proceed with the payment?"
       );
 
       if (confirmation) {
