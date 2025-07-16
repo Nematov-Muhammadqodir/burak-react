@@ -10,6 +10,7 @@ import {
 } from "../../../lib/sweetAlert";
 import MemberService from "../../services/MemberService";
 import { Messages, serverApi } from "../../../lib/config";
+import { MemberUpdateInput } from "../../../lib/types/member";
 
 export function Settings() {
   const { authMember, setAuthMember, setOrderBuilder } = useGlobals();
@@ -18,14 +19,16 @@ export function Settings() {
       ? `${serverApi}/${authMember.memberImage}`
       : "/icons/default-user.svg"
   );
-  const [memberUpdateInput, setMemberUpadteInput] = useState({
-    memberNick: authMember?.memberNick,
-    memberPhone: authMember?.memberPhone,
-    memberPassword: authMember?.memberPassword,
-    memberAddress: authMember?.memberAddress,
-    memberDesc: authMember?.memberDesc,
-    memberImage: authMember?.memberImage,
-  });
+  const [memberUpdateInput, setMemberUpadteInput] = useState<MemberUpdateInput>(
+    {
+      memberNick: authMember?.memberNick,
+      memberPhone: authMember?.memberPhone,
+      memberPassword: authMember?.memberPassword,
+      memberAddress: authMember?.memberAddress,
+      memberDesc: authMember?.memberDesc,
+      memberImage: authMember?.memberImage,
+    }
+  );
 
   // HANDLERS
 

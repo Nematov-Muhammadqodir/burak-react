@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack, Container, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { RippleBadge } from "./MaterialTheme/styled";
@@ -15,6 +15,7 @@ import Footer from "./components/footer";
 import "../css/app.css";
 import "../css/navbar.css";
 import "../css/footer.css";
+import "../css/chat.css";
 import Test from "./screens/Test";
 import { CartItem } from "../lib/types/search";
 import useBasket from "./hooks/useBasket";
@@ -25,6 +26,8 @@ import { Messages } from "../lib/config";
 import MemberService from "./services/MemberService";
 import { useGlobals } from "./hooks/useGlobals";
 import { MouseEvent } from "react";
+import ChatApp from "./screens/chatPage";
+import { useAuthStore } from "../store/useAuthStore";
 
 function App() {
   const location = useLocation();
@@ -34,6 +37,7 @@ function App() {
   const [signupOpen, setSignupOpen] = useState<boolean>(false);
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { disconnectSocket, authUser } = useAuthStore();
 
   const handleSignupClose = () => setSignupOpen(false);
   const handleLoginClose = () => setLoginOpen(false);
@@ -48,15 +52,19 @@ function App() {
     try {
       const member = new MemberService();
       await member.logout();
-
+      useAuthStore.setState({ authUser: null });
       await sweetTopSuccessAlert("success", 700);
-
+      disconnectSocket();
       setAuthMember(null);
     } catch (err) {
       console.log(err);
       sweetErrorHandling(Messages.error1);
     }
   };
+
+  useEffect(() => {
+    useAuthStore.getState().checkAuth();
+  }, []);
   return (
     <>
       {location.pathname === "/" ? (
@@ -101,6 +109,9 @@ function App() {
           <UsersPage />
         </Route>
 
+        <Route path="/chat">
+          <ChatApp />
+        </Route>
         <Route path="/help">
           <HelpPage />
         </Route>

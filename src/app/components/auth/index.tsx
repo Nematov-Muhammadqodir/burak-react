@@ -12,6 +12,7 @@ import { LoginInput, MemberInput } from "../../../lib/types/member";
 import MemberService from "../../services/MemberService";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { useGlobals } from "../../hooks/useGlobals";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -44,6 +45,8 @@ interface AuthenticationModalProps {
 }
 
 export default function AuthenticationModal(props: AuthenticationModalProps) {
+  const { connectSocket, authUser } = useAuthStore();
+
   const { signupOpen, loginOpen, handleSignupClose, handleLoginClose } = props;
   const classes = useStyles();
 
@@ -86,7 +89,9 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
 
       const member = new MemberService();
       const result = await member.signup(signupInput);
+      useAuthStore.setState({ authUser: result });
       setAuthMember(result);
+      useAuthStore.getState().connectSocket();
       handleSignupClose();
     } catch (err) {
       console.log("Error, handleSignupRequest", err);
@@ -110,8 +115,9 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
 
       const result = await member.login(loginInput);
       //Saving authenticated user
+      useAuthStore.setState({ authUser: result });
       setAuthMember(result);
-
+      useAuthStore.getState().connectSocket();
       handleLoginClose();
     } catch (err) {
       console.log("Error, handleLoginRequest", err);
